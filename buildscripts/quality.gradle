@@ -1,0 +1,32 @@
+import org.ahivs.Tools
+
+configurations {
+    detekt
+}
+
+task detekt(type: JavaExec) {
+    main = "io.gitlab.arturbosch.detekt.cli.Main"
+    classpath = configurations.detekt
+    def input = "$projectDir"
+    def config = "detekt/detekt-config.yml"
+    def baseline = "detekt/baseline.xml"
+    def exclude = "**/build/**,**/resources/**,**/buildSrc/**/protogen/**"
+    def params = ['-i', input, '-c', config, '-ex', exclude, '-b', baseline, '-r', 'html:build/reports/detekt.html,xml:build/reports/detekt.xml,txt:build/reports/detekt.text', '-ac', '--parallel']
+    args(params)
+}
+
+task detektBaseline(type: JavaExec) {
+    main = "io.gitlab.arturbosch.detekt.cli.Main"
+    classpath = configurations.detekt
+    def input = "$projectDir"
+    def config = "detekt/detekt-config.yml"
+    def baseline = "detekt/baseline.xml"
+    def exclude = "**/build/**,**/resources/**,**/buildSrc/**/protogen/**"
+    def params = ['-i', input, '-c', config, '-ex', exclude, '-b', baseline, '-cb', '--parallel']
+    args(params)
+}
+
+dependencies {
+    detekt Tools.Detekt.cli
+    detekt Tools.Detekt.formatting
+}
